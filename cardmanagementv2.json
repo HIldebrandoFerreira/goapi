@@ -1,0 +1,1234 @@
+{
+  "openapi": "3.0.0",
+  "tags": [
+    {
+      "name": "cards",
+      "description": "Operations available to manage Tokenized Cards"
+    },
+    {
+      "name": "blacklists",
+      "description": "Operations available to check blacklist status"
+    }
+  ],
+  "paths": {
+    "/users/{user_id}/cards/{id}": {
+      "delete": {
+        "security": [
+          {
+            "three_legged": [
+              "card-management-user-delete"
+            ]
+          }
+        ],
+        "description": "Delete a Tokenized  Card of the user.",
+        "tags": [
+          "cards"
+        ],
+        "operationId": "deleteTokenizedCards",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          },
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator1"
+          },
+          {
+            "$ref": "#/components/parameters/x-4p-channel-id1"
+          }
+        ],
+        "summary": "Delete a Tokenized Card of the user.",
+        "responses": {
+          "204": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "No Content"
+          },
+          "400": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Problem with the client request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema1"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "INVALID_ARGUMENT",
+                      "message": "Client specified an invalid argument, request body or query param"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Client does not have sufficient permission",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema2"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "PERMISSION_DENIED",
+                      "message": "Authenticated user has no permission to access the requested resource"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema3"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "A specified resource is not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema4"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "INTERNAL",
+                      "message": "Server error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "504": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Request timeout exceeded. If it happens repeatedly, consider reducing the request complexity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema5"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "TIMEOUT",
+                      "message": "Request timeout exceeded. Try it later"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/cards": {
+      "post": {
+        "security": [
+          {
+            "three_legged": [
+              "card-management-user-write"
+            ]
+          }
+        ],
+        "description": "Create a new Tokenized Card for the user.",
+        "tags": [
+          "cards"
+        ],
+        "operationId": "createTokenizedCard",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator1"
+          },
+          {
+            "$ref": "#/components/parameters/x-4p-channel-id1"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTokenizedCard"
+              }
+            }
+          },
+          "description": "Body to create a tokenized card",
+          "required": true
+        },
+        "summary": "Create a new Tokenized Card for the user.",
+        "responses": {
+          "201": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenizedCard"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "alias": "My VISA Card",
+                      "id": "9e844a09-fe8b-4b39-8b09-74161c2259a8",
+                      "masked_number": "244533******1234",
+                      "type": "Credit",
+                      "expiration_date": "09/22",
+                      "token_issuer": "DCP",
+                      "brand": "VISA",
+                      "token": "APINDFGESCEDDPDAPOFAJSDOFJAPOFAAEFAIADPJFA"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Problem with the client request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema1"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "INVALID_ARGUMENT",
+                      "message": "Client specified an invalid argument, request body or query param"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Client does not have sufficient permission",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema2"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "PERMISSION_DENIED",
+                      "message": "Authenticated user has no permission to access the requested resource"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Resource Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema3"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "A specified resource is not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "The resource already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "code"
+                      ],
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": [
+                            "ALREADY_EXISTS"
+                          ],
+                          "default": "ALREADY_EXISTS",
+                          "description": "The resource that a client tried to create already exists."
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "description": "A human readable description of what the event represent"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "ALREADY_EXISTS",
+                      "message": "A specified resource already exists"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema4"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "INTERNAL",
+                      "message": "Server error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "504": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Request timeout exceeded. If it happens repeatedly, consider reducing the request complexity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema5"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "TIMEOUT",
+                      "message": "Request timeout exceeded. Try it later"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "three_legged": [
+              "card-management-user-read"
+            ]
+          }
+        ],
+        "description": "Get Tokenized Cards of the user.",
+        "tags": [
+          "cards"
+        ],
+        "operationId": "getTokenizedCards",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator1"
+          },
+          {
+            "$ref": "#/components/parameters/x-4p-channel-id1"
+          }
+        ],
+        "summary": "Get Tokenized Cards of the user.",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListOfTokenizedCards"
+                },
+                "examples": {
+                  "response": {
+                    "value": [
+                      {
+                        "id": "9e844a09-fe8b-4b39-8b09-74161c2259a8",
+                        "alias": "My VISA Card",
+                        "masked_number": "244533******1234",
+                        "brand": "VISA",
+                        "type": "Credit",
+                        "expiration_date": "09/22",
+                        "token": "APINDFGESCEDDPDAPOFAJSDOFJAPOFAAEFAIADPJFA",
+                        "token_issuer": "DCP"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Problem with the client request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema1"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "INVALID_ARGUMENT",
+                      "message": "Client specified an invalid argument, request body or query param"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Client does not have sufficient permission",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema2"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "PERMISSION_DENIED",
+                      "message": "Authenticated user has no permission to access the requested resource"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema3"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "A specified resource is not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema4"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "INTERNAL",
+                      "message": "Server error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "504": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Request timeout exceeded. If it happens repeatedly, consider reducing the request complexity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema5"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "TIMEOUT",
+                      "message": "Request timeout exceeded. Try it later"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/is-blacklisted": {
+      "get": {
+        "security": [
+          {
+            "three_legged": [
+              "card-management-blacklist-read"
+            ]
+          }
+        ],
+        "description": "Get Blacklist information of an user with regards to the use of Tokenized Cards.",
+        "tags": [
+          "blacklists"
+        ],
+        "operationId": "getBlacklistStatus",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          },
+          {
+            "$ref": "#/components/parameters/x-correlator1"
+          },
+          {
+            "$ref": "#/components/parameters/x-4p-channel-id1"
+          }
+        ],
+        "summary": "Get Blacklist information of an user with regards to the use of Tokenized Cards.",
+        "responses": {
+          "200": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blacklist"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "is_blacklisted": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Problem with the client request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema1"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "INVALID_ARGUMENT",
+                      "message": "Client specified an invalid argument, request body or query param"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Client does not have sufficient permission",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema2"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "PERMISSION_DENIED",
+                      "message": "Authenticated user has no permission to access the requested resource"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Resource Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema3"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "A specified resource is not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema4"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "INTERNAL",
+                      "message": "Server error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "504": {
+            "headers": {
+              "x-correlator": {
+                "description": "Correlation id for the different services",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Request timeout exceeded. If it happens repeatedly, consider reducing the request complexity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema5"
+                },
+                "examples": {
+                  "response": {
+                    "value": {
+                      "code": "TIMEOUT",
+                      "message": "Request timeout exceeded. Try it later"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "Card Management - DRAFT VERSION",
+    "description": "Allows to get information of Tokenized Cards of a given user stored by the OB, to create (save) or delete a Tokenized Card, and to check whether a given user is blacklisted to make payments with his/her Tokenized Cards.\n\n# Relevant Definitions and concepts\n\n- **Tokenized Card**: Credit or debit Card stored in OB Card storage solution. The information saved is a token valid for doing payments with the card together with metadata needed to identify the card.\n\n# API Functionality\n\n This API allows to retrieve the Tokenized Cards stored by the OB associated to a given user, as well as to save a new Tokenized Card for a User, to delete a existing Tokenized Card, and finally to check blacklisting status of a user for the use of his/her Tokenized Cards.\n\n# Resources and Operations overview\n\n There are four resources in the API:\n- One to retrieve saved tokenized cards, which provides the list of stored cards, providing for each the token together with metadata to describe the card as well as some other info such as the which is the default one.\n- Another to request the storage of a new Tokenized card for the user.\n- A third one to request the deletion of a Tokenized Card.\n- Finally a resource to check blacklisting status of a given user for making payments with his/her Tokenized Cards.\n\n Resource in the API can be used in 3-legged mode. When accessed in 3 legged mode, the URI param {user_id} should be substituted by the special keyword ‘me’.\n\n# Further Info and Support\nFind answers to Frequently Asked Questions in **https://qna.baikalplatform.com/c/api-faq**.\n\n Topics with the **tag 'tokenized card'** are specific for Card Management API.",
+    "version": "2.0.0",
+    "contact": {
+      "name": "4th Platform Team",
+      "email": "4pf@tid.es"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.baikalplatform.com/card-management/v2"
+    }
+  ],
+  "components": {
+    "parameters": {
+      "UserId": {
+        "name": "user_id",
+        "in": "path",
+        "required": true,
+        "description": "id of the user for which the methods apply.\nThis value should be changed to the special keyword 'me' to simplify calls when access using OAuth2 with three-legged authentication.",
+        "x-fp-identifier": "user_id",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "Id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Tokenized Card Identifier. Unique at least for a given user",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "x-correlator1": {
+        "in": "header",
+        "name": "x-correlator",
+        "required": false,
+        "description": "Correlation id for the different services",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "x-4p-channel-id1": {
+        "in": "header",
+        "name": "x-4p-channel-id",
+        "required": false,
+        "description": "Channel id for the different services",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "securitySchemes": {
+      "client_credentials": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://auth.baikalplatform.com/token",
+            "scopes": {
+              "card-management:status": "Permission to read API endpoints health status"
+            }
+          }
+        }
+      },
+      "three_legged": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.baikalplatform.com/authorize",
+            "tokenUrl": "https://auth.baikalplatform.com/token",
+            "scopes": {
+              "card-management-user-read": "No description available",
+              "card-management-user-write": "No description available",
+              "card-management-user-delete": "No description available",
+              "card-management-blacklist-read": "No description available"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "ListOfTokenizedCards": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/TokenizedCard"
+        }
+      },
+      "TokenizedCard": {
+        "type": "object",
+        "description": "Information of a Tokenized Card",
+        "required": [
+          "id",
+          "masked_number",
+          "brand",
+          "type",
+          "expiration_date",
+          "token",
+          "token_issuer"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the card for this user"
+          },
+          "alias": {
+            "type": "string",
+            "description": "Alias given to this Tokenized Card, if any. User Friendly Field"
+          },
+          "masked_number": {
+            "type": "string",
+            "description": "Masked Personal Account Number, i.e.: Card number."
+          },
+          "brand": {
+            "type": "string",
+            "description": "Card Brand. A set of supported values is defined, bearing in mind this list can be extended in the future. API clients MUST be ready to support new values when included. Also, a given OB may not support every value.",
+            "enum": [
+              "VISA",
+              "MASTERCARD",
+              "AMERICAN EXPRESS",
+              "ELO",
+              "HIPERCARD"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Card Type",
+            "enum": [
+              "Credit",
+              "Debit",
+              "Unspecified"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of the card, e.g.: Platinum, Business."
+          },
+          "holder_name": {
+            "type": "string",
+            "description": "Name of the card holder"
+          },
+          "expiration_date": {
+            "type": "string",
+            "pattern": "^(0[1-9]|1[0-2])/[0-9]{2}$",
+            "description": "Card expiration date, in format MM/YY"
+          },
+          "token": {
+            "type": "string",
+            "description": "The token itself"
+          },
+          "token_issuer": {
+            "type": "string",
+            "description": "Whoever issued the token. DCP is currently only supported issuer.",
+            "enum": [
+              "DCP"
+            ]
+          }
+        }
+      },
+      "CreateTokenizedCard": {
+        "type": "object",
+        "description": "Object to create a Tokenized Card",
+        "required": [
+          "masked_number",
+          "brand",
+          "type",
+          "expiration_date",
+          "token",
+          "token_issuer"
+        ],
+        "properties": {
+          "alias": {
+            "type": "string",
+            "description": "Alias given to this Tokenized Card. If not included server may generate an alias anyway. User Friendly Field"
+          },
+          "masked_number": {
+            "type": "string",
+            "description": "Masked Personal Account Number, i.e.: Card number."
+          },
+          "brand": {
+            "type": "string",
+            "description": "Card Brand. A set of supported values is defined, bearing in mind this list can be extended in the future. API clients MUST be ready to support new values when included. Also, a given OB may not support every value.",
+            "enum": [
+              "VISA",
+              "MASTERCARD",
+              "AMERICAN EXPRESS",
+              "ELO",
+              "HIPERCARD"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Card Type",
+            "enum": [
+              "Credit",
+              "Debit",
+              "Unspecified"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of the card, e.g.: Platinum, Business."
+          },
+          "holder_name": {
+            "type": "string",
+            "description": "Name of the card holder"
+          },
+          "expiration_date": {
+            "type": "string",
+            "pattern": "^(0[1-9]|1[0-2])/[0-9]{2}$",
+            "description": "Card expiration date, in format MM/YY"
+          },
+          "token": {
+            "type": "string",
+            "description": "The token itself"
+          },
+          "token_issuer": {
+            "type": "string",
+            "description": "Whoever issued the token. DCP is currently only supported issuer.",
+            "enum": [
+              "DCP"
+            ]
+          }
+        },
+        "example": {
+          "alias": "My VISA Card",
+          "masked_number": "244533******1234",
+          "brand": "VISA",
+          "type": "Credit",
+          "expiration_date": "09/22",
+          "token": "APINDFGESCEDDPDAPOFAJSDOFJAPOFAAEFAIADPJFA",
+          "token_issuer": "DCP"
+        }
+      },
+      "Blacklist": {
+        "type": "object",
+        "description": "Indicates if user is in blacklist to use the cards to perform payments",
+        "required": [
+          "is_blacklisted"
+        ],
+        "properties": {
+          "is_blacklisted": {
+            "type": "boolean",
+            "description": "Blacklisting status of a given user with regards the use of Tokenized Cards for Payments."
+          }
+        }
+      },
+      "schema1": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "code"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "INVALID_ARGUMENT"
+                ],
+                "default": "INVALID_ARGUMENT",
+                "description": "Client specified an invalid argument, request body or query param."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "A human readable description of what the event represent"
+              }
+            }
+          }
+        ]
+      },
+      "schema2": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "code"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "PERMISSION_DENIED"
+                ],
+                "default": "PERMISSION_DENIED",
+                "description": "Client does not have sufficient permissions to perform this action."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "A human readable description of what the event represent"
+              }
+            }
+          }
+        ]
+      },
+      "schema3": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "code"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "NOT_FOUND"
+                ],
+                "default": "NOT_FOUND",
+                "description": "The specified resource is not found"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "A human readable description of what the event represent"
+              }
+            }
+          }
+        ]
+      },
+      "schema4": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "code"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "INTERNAL"
+                ],
+                "default": "INTERNAL",
+                "description": "Unknown server error.Typically a server bug."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "A human readable description of what the event represent"
+              }
+            }
+          }
+        ]
+      },
+      "schema5": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "code"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "TIMEOUT"
+                ],
+                "default": "TIMEOUT",
+                "description": "Request timeout exceeded"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "A human readable description of what the event represent"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
